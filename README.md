@@ -18,3 +18,10 @@
         <img src="http://img.shields.io/badge/swift-4.1-brightgreen.svg" alt="Swift 4.1">
     </a>
 </p>
+
+<h2>Things to know for testing</h2>
+
+<p>
+    Before you can test you have to set the environment variable <code>API_KEY</code> to something.<br>
+    <code>$ export API_KEY=anything; vapor test</code>
+</p>
