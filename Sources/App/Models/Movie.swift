@@ -6,7 +6,7 @@ final class Movie: SQLiteModel {
     /// The unique identifier for this `Movie`.
     var id: Int?
 
-    /// A title describing what this `Movie` entails.
+    /// The title of the `Movie`.
     var title: String
 
     /// Creates a new `Movie`.

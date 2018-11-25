@@ -7,27 +7,24 @@ final class AppTests: XCTestCase {
     var responder: Responder!
     var movie: Movie!
     var apiKey: String?
-    
-    struct Error: Codable {
-        let error: Bool
-        let reason: String
-    }
 
     override func setUp() {
         super.setUp()
+        
+        /// Normally I prefer not to use `try!`, but
+        /// unfortunately I'm not allowed to `throw` in this method.
 
-        /// The API key is set in the `Run` scheme under `Test`
         self.apiKey = Environment.get("API_KEY")
         self.app = try! App.app(.testing)
         self.responder = try! app.make(Responder.self)
-        let req = Request(using: app)
-        self.movie = try! Movie(title: "Testing...").save(on: req).wait()
+        self.movie = try! Movie(title: "Testing...")
+            .save(on: Request(using: app)).wait()
     }
     
     func testAuthMiddleware(url: String) throws {
         /// If the `AuthMiddleware` is properly configured,
         /// the bare request should yield an `Unauthorized` error.
-        let error: Error = try get(url: url)
+        let error: ErrorResponse = try get(url: url)
         XCTAssert(error.reason == "Unauthorized")
         
         /// And the authenticated request should yield no error.
@@ -80,8 +77,11 @@ final class AppTests: XCTestCase {
     
     /// Adds the api key to the query string of a url and returns the url
     func authorized(_ url: String) throws -> String {
+        guard var components = URLComponents(string: url) else {
+            throw "\"\(url)\" is not a url"
+        }
+        
         let apiKeyItem = URLQueryItem(name: "apiKey", value: apiKey)
-        var components = URLComponents(string: url)!
         
         if components.queryItems != nil {
             components.queryItems!.append(apiKeyItem)

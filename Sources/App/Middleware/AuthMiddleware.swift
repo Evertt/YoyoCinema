@@ -8,7 +8,7 @@ class AuthMiddleware: Middleware {
     }
     
     func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
-        let apiKey: String? = try? request.query.get(at: "apiKey")
+        let apiKey = try request.query.get(at: "apiKey") as String?
         
         guard apiKey == self.apiKey else {
             throw Abort(.unauthorized)
