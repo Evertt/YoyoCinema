@@ -57,7 +57,7 @@ final class AppTests: XCTestCase {
         
         /// A request with the correct `id` should return the correct `Movie`.
         let movie: Movie = try get(url: authorized("/movies/\(correctId)"))
-        XCTAssertNotNil(movie.title == self.movie.title)
+        XCTAssert(movie.title == self.movie.title)
         
         /// A request with the wrong `id` should return a `notFound` error.
         let resp: Response = try get(url: authorized("/movies/\(wrongId)"))
